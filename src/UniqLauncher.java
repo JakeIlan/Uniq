@@ -13,7 +13,7 @@ public class UniqLauncher {
     @Option(name = "-u", usage = "Uniq lines only")
     private boolean uniqLines = false;
 
-    @Option(name = "-с", usage = "Counting replaced lines")
+    @Option(name = "-c", usage = "Counting replaced lines")
     private boolean countLines = false;
 
     @Option(name = "-s", metaVar = "num", usage = "Ignoring first N chars")

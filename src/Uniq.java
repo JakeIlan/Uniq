@@ -31,27 +31,34 @@ public class Uniq {
                 String line = reader.readLine();
                 line = line.substring(ignoredChars, line.length());
                 String prevLine = line;
+                line = reader.readLine();
                 Integer count = 1;
-                while (reader.readLine() != null) {
-                    line = reader.readLine();
+                do {
                     if (register) {
                         if (line.toLowerCase().equals(prevLine.toLowerCase())) {
                             count++;
                         } else {
-                            if (this.count) writeFileString(count.toString() + " ", out);
-                            writeFileString(prevLine, out);
+                            if (this.count) writer.write(count.toString()+" x ");
+                            writer.write(prevLine);
+                            writer.newLine();
+                            count = 1;
                         }
                     } else {
                         if (line.equals(prevLine)) {
                             count++;
                         } else {
-                            if (this.count) writeFileString(count.toString() + " ", out);
-                            writeFileString(prevLine, out);
+                            if (this.count) writer.write(count.toString()+" x ");
+                            writer.write(prevLine);
+                            writer.newLine();
+                            count = 1;
                         }
                     }
                     prevLine = line;
-                    count = 1;
-                }
+                    line = reader.readLine();
+                }  while (line != null);
+                if (this.count) writer.write(count.toString()+" x ");
+                writer.write(prevLine);
+
             }
         }
     }
