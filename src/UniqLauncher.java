@@ -3,7 +3,10 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import java.io.File;
+
 import java.io.IOException;
+import java.util.Scanner;
 
 public class UniqLauncher {
 
@@ -41,10 +44,57 @@ public class UniqLauncher {
             return;
         }
 
-        Uniq uniq = new Uniq(register, uniqLines, countLines, ignoredChars, outputFileName, inputFileName);
         try {
-            uniq.writeUniq(inputFileName, outputFileName);
-            System.out.println("Файл успешно обработан");
+            if (!outputFileName.equals("")){
+                File file = new File(outputFileName);
+                if (file.exists()) {
+                    System.out.println("Файл с выбранным именем уже свществует. Заменить его? Y/N");
+                    Scanner scan = new Scanner(System.in);
+                    String answer = scan.next();
+                    if (answer.equals("Y")) {
+                        if (file.delete()) {
+                            System.out.println("Старый файл удалён успешно.");
+                        }
+                        Uniq uniq = new Uniq(register, uniqLines, countLines, ignoredChars, outputFileName, inputFileName);
+                        uniq.writeUniq(inputFileName, outputFileName);
+                        System.out.println("Входной файл обработан успешно.");
+                        System.out.println("Конец программы.");
+                    }
+                    else {
+                        if (answer.equals("N")) {
+                            System.out.println("Вывести результат в консоль? Y/N");
+                            answer = scan.next();
+                            if (answer.equals("Y")){
+                                System.out.println("Результат будет выведен на экран:");
+                                System.out.println("-------------------");
+                                System.out.println("");
+                                Uniq uniq = new Uniq(register, uniqLines, countLines, ignoredChars, outputFileName, inputFileName);
+                                uniq.writeUniq(inputFileName);
+                                System.out.println("");
+                                System.out.println("-------------------");
+                                System.out.println("Входной файл обработан успешно.");
+                                System.out.println("Конец программы.");
+                            }
+                            else System.out.println("Конец программы.");
+                        }
+                    }
+                } else {
+                    Uniq uniq = new Uniq(register, uniqLines, countLines, ignoredChars, outputFileName, inputFileName);
+                    uniq.writeUniq(inputFileName, outputFileName);
+                    System.out.println("Фходной файл обработан успешно.");
+                    System.out.println("Конец программы.");
+                }
+            } else {
+                System.out.println("Результат будет выведен на экран:");
+                System.out.println("-------------------");
+                System.out.println("");
+                Uniq uniq = new Uniq(register, uniqLines, countLines, ignoredChars, outputFileName, inputFileName);
+                uniq.writeUniq(inputFileName);
+                System.out.println("");
+                System.out.println("-------------------");
+                System.out.println("Входной файл обработан успешно.");
+                System.out.println("Конец программы.");
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

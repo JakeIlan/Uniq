@@ -19,23 +19,23 @@ public class Uniq {
         this.inputFileName = inputFileName;
     }
 
-    private void writeFileString(String str, OutputStream out) throws IOException{
-        for (int i = 0; i < str.length(); i++){
-            out.write(str.charAt(i));
+    public void writeUniq(String inputFileName, String outputFileName) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
+            try (FileOutputStream outputStream = new FileOutputStream(outputFileName, true)) {
+                writeUniq(inputStream, outputStream);
+            }
         }
     }
 
     public void writeUniq(InputStream in, OutputStream out) throws IOException{
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
+                String prevLine = reader.readLine();;
                 String line = reader.readLine();
-                line = line.substring(ignoredChars, line.length());
-                String prevLine = line;
-                line = reader.readLine();
                 Integer count = 1;
                 do {
                     if (register) {
-                        if (line.toLowerCase().equals(prevLine.toLowerCase())) {
+                        if (line.substring(ignoredChars, line.length()).toLowerCase().equals(prevLine.substring(ignoredChars, line.length()).toLowerCase())) {
                             count++;
                         } else {
                             if (this.count) writer.write(count.toString()+" x ");
@@ -44,7 +44,7 @@ public class Uniq {
                             count = 1;
                         }
                     } else {
-                        if (line.equals(prevLine)) {
+                        if (line.substring(ignoredChars, line.length()).equals(prevLine.substring(ignoredChars, line.length()))) {
                             count++;
                         } else {
                             if (this.count) writer.write(count.toString()+" x ");
@@ -58,19 +58,45 @@ public class Uniq {
                 }  while (line != null);
                 if (this.count) writer.write(count.toString()+" x ");
                 writer.write(prevLine);
-
             }
         }
     }
 
-    public void writeUniq(String inputFileName, String outputFileName) throws IOException {
+    public void writeUniq(String inputFileName) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
-            try (FileOutputStream outputStream = new FileOutputStream(outputFileName, true)) {
-                writeUniq(inputStream, outputStream);
-            }
+                writeUniq(inputStream);
         }
     }
 
-
+    public void writeUniq(InputStream in) throws IOException{
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            String prevLine = reader.readLine();;
+            String line = reader.readLine();
+            Integer count = 1;
+            do {
+                if (register) {
+                    if (line.substring(ignoredChars, line.length()).toLowerCase().equals(prevLine.substring(ignoredChars, line.length()).toLowerCase())) {
+                        count++;
+                    } else {
+                        if (this.count) System.out.println(count.toString()+" x "+prevLine);
+                        else System.out.println(prevLine);
+                        count = 1;
+                    }
+                } else {
+                    if (line.substring(ignoredChars, line.length()).equals(prevLine.substring(ignoredChars, line.length()))) {
+                        count++;
+                    } else {
+                        if (this.count) System.out.println(count.toString()+" x "+prevLine);
+                        else System.out.println(prevLine);
+                        count = 1;
+                    }
+                }
+                prevLine = line;
+                line = reader.readLine();
+            }  while (line != null);
+            if (this.count) System.out.println(count.toString()+" x "+prevLine);
+            else System.out.println(prevLine);
+        }
+    }
 
 }
